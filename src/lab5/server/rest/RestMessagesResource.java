@@ -56,7 +56,7 @@ public class RestMessagesResource extends RestResource implements Messages {
         Log.info("removeInboxMessage: " + name);
         Result<Void> result = impl.removeInboxMessage(name,mid,pwd);
         if (result.isOK()){
-            return result;
+            return Result.ok(null);
         } else {
             throw new WebApplicationException(unwrapResultOrThrow(result).toString());
         }
@@ -67,7 +67,7 @@ public class RestMessagesResource extends RestResource implements Messages {
         Log.info("deleteMessage: " + name);
         Result<Void> result = impl.deleteMessage(name,mid,pwd);
         if (result.isOK()){
-            return result;
+            return Result.ok(null);
         } else {
             throw new WebApplicationException(unwrapResultOrThrow(result).toString());
         }

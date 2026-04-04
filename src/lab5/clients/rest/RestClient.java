@@ -96,7 +96,16 @@ public class RestClient {
 	}
 
 	protected Result<Void> processResponse(Response r) {
-		throw new RuntimeException(ErrorCode.NOT_IMPLEMENTED.toString());
+		try {
+			int statusCode = r.getStatus();
+			if (statusCode == Response.Status.OK.getStatusCode()
+					|| statusCode == Response.Status.NO_CONTENT.getStatusCode()) {
+				return Result.ok(null);
+			}
+			return Result.error(getErrorCodeFrom(statusCode));
+		} finally {
+			r.close();
+		}
 	}
 
 	

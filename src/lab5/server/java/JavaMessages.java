@@ -35,7 +35,7 @@ public class JavaMessages implements Messages {
     public Result<String> postMessage(String pwd, Message msg) {
         log.info("postMessage: " + msg);
 
-        if (msg.getSubject() == null || msg.getContents() == null || msg.getId() == null
+        if (msg.getSubject() == null || msg.getContents() == null
                 || msg.getSender() == null || msg.getDestination() == null || pwd == null) {
             log.info("Message object invalid or Password is Null");
             return Result.error(Result.ErrorCode.BAD_REQUEST);

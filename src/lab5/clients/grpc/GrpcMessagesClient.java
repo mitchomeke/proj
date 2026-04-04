@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 
 public class GrpcMessagesClient extends GrpcClient implements Messages {
     private static Logger Log = Logger.getLogger(GrpcMessagesClient.class.getName());
-    protected GrpcMessagesClient(URI serverURI) {
+    public GrpcMessagesClient(URI serverURI) {
         super(serverURI, Log);
     }
 
