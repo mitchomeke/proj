@@ -6,7 +6,7 @@ import lab5.api.java.Result;
 
 public class RestResource {
 
-	private static Status errorCodeToStatus( Result.ErrorCode error ) {
+	public static Status errorCodeToStatus(Result.ErrorCode error) {
     	Status status =  switch( error) {
     	case NOT_FOUND -> Status.NOT_FOUND;
     	case CONFLICT -> Status.CONFLICT;

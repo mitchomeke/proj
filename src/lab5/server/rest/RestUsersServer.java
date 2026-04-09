@@ -3,6 +3,7 @@ package lab5.server.rest;
 import java.net.UnknownHostException;
 import java.util.logging.Logger;
 
+import lab5.api.rest.RestUsers;
 import org.glassfish.jersey.server.ResourceConfig;
 
 import lab5.api.java.Users;
@@ -23,9 +24,16 @@ public class RestUsersServer extends AbstractRestServer {
 	}	
 	
 	public static void main(String[] args) throws Exception{
-		int port = Integer.parseInt(args[0]);
-		String domain = args[1];
-		new RestUsersServer(port,Users.SERVICE_NAME,domain).start();
+// 1. Determine Port (use arg[0] or default to 8080)
+		int port = (args.length > 0) ? Integer.parseInt(args[0]) : 8080;
+
+		// 2. Determine Domain (use arg[1] or default to "ourorg")
+		String domain = (args.length > 1) ? args[1] : "ourorg";
+
+		Log.info(String.format("Starting Users Server on port %d, domain %s", port, domain));
+
+		// 3. Start the server
+		new RestUsersServer(port, Users.SERVICE_NAME, domain).start();
 	}
 
 }

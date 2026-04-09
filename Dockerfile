@@ -15,6 +15,8 @@ WORKDIR /home/sd
 # copy hibernate config
 COPY hibernate.cfg.xml hibernate.cfg.xml
 
+COPY messages.props messages.props
+
 # copy an example image for experiments
 COPY example.png example.png
 

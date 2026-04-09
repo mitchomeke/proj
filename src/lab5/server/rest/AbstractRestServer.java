@@ -12,7 +12,7 @@ import lab5.Discovery;
 
 
 public abstract class AbstractRestServer {
-	private static final String SERVER_BASE_URI = "http://%s:%s/rest";
+	private static final String SERVER_BASE_URI = "http://%s:%d/rest";
 	
 	static {
 		System.setProperty("java.net.preferIPv4Stack", "true");
@@ -32,6 +32,7 @@ public abstract class AbstractRestServer {
 		this.service = service;		
 		this.serverURI = SERVER_BASE_URI.formatted(InetAddress.getLocalHost().getHostName(), port);
 		this.domain = domain;
+
 	}
 
 	protected void start() {
@@ -40,12 +41,12 @@ public abstract class AbstractRestServer {
 		
 		registerResources( config );
 		
-		var uri = URI.create("http://0.0.0.0:%s/rest".formatted(port));
+		var uri = URI.create("http://0.0.0.0:%d/rest".formatted(port));
 		System.out.println( uri );
 		
 		JdkHttpServerFactory.createHttpServer( uri, config);
 
-		Discovery.announce("%s@%s".formatted(service, domain), serverURI );
+		Discovery.announce(service,domain,serverURI);
 		
 		Log.info(String.format("%s Server ready @ %s\n",  service, serverURI));
 	}

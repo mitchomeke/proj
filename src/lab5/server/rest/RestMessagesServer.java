@@ -20,6 +20,6 @@ public class RestMessagesServer extends AbstractRestServer{
     public static void main (String[] args) throws UnknownHostException {
         int port = Integer.parseInt(args[0]);
         String domain = args[1];
-        new RestMessagesServer(port,Messages.SERVICE_NAME,domain);
+        new RestMessagesServer(port,Messages.SERVICE_NAME,domain).start();
     }
 }

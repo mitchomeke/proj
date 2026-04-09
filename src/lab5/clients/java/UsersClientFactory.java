@@ -36,7 +36,7 @@ public class UsersClientFactory {
 	
 	public static void main(String[] args ) {
 		
-		Users client = UsersClientFactory.get("some_domain");
+		Users client = UsersClientFactory.get("ourorg");
 		
 		Result<User> u = client.getUser("name", "pwd");
 		

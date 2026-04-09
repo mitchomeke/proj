@@ -43,7 +43,7 @@ public class JavaUsers implements Users {
 			return Result.error(ErrorCode.CONFLICT);
 		}
 
-		return Result.ok(user.getName());
+		return Result.ok(user.getName()+"@"+user.getDomain());
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class JavaUsers implements Users {
 		try {
 			user = hibernate.get(User.class, userId);
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			return Result.error(ErrorCode.INTERNAL_ERROR);
 		}
 
@@ -87,10 +87,10 @@ public class JavaUsers implements Users {
 		}
 		User existingUser = getUser(userId,password).value();
 		if (existingUser == null){
-			return Result.error(ErrorCode.INTERNAL_ERROR);
+			return Result.error(ErrorCode.NOT_FOUND);
 		}
 		if (!existingUser.getPwd().equals(password)){
-			return Result.error(ErrorCode.CONFLICT);
+			return Result.error(ErrorCode.FORBIDDEN);
 		}
 		existingUser.setDisplayName(user.getDisplayName());
 		existingUser.setPwd(user.getPwd());
@@ -103,16 +103,16 @@ public class JavaUsers implements Users {
 		} catch (StaleObjectStateException s) {
 			Log.info("Data changed while updating");
 			s.printStackTrace();
-			return Result.error(ErrorCode.CONFLICT);
+			return Result.error(ErrorCode.BAD_REQUEST);
 		} catch (TransientObjectException t) {
 			Log.info("Object does not exist in the database");
-			return Result.error(ErrorCode.NOT_FOUND);
+			return Result.error(ErrorCode.BAD_REQUEST);
 		} catch (ConstraintViolationException c) {
 			Log.info("Object does not meet constraints of the database");
-			return Result.error(ErrorCode.CONFLICT);
+			return Result.error(ErrorCode.BAD_REQUEST);
 		} catch (Exception x) {
 			x.printStackTrace();
-			return Result.error(ErrorCode.INTERNAL_ERROR);
+			return Result.error(ErrorCode.BAD_REQUEST);
 		}
 	}
 
@@ -126,21 +126,25 @@ public class JavaUsers implements Users {
 		User var;
 		if ((var = getUser(userId,password).value()) != null){
 			try {
+				if (!var.getPwd().equals(password)){
+					Log.info("Wrong password");
+					return Result.error(ErrorCode.FORBIDDEN);
+				}
 				hibernate.delete(var);
 			} catch (ConstraintViolationException c){
 				c.printStackTrace();
 				Log.info("Variable does not meet the database constraints");
-				return Result.error(ErrorCode.CONFLICT);
+				return Result.error(ErrorCode.BAD_REQUEST);
 			} catch (TransientObjectException t){
 				t.printStackTrace();
 				Log.info("User does not Exist in the database");
 			} catch (Exception x){
 				x.printStackTrace();
-				return Result.error(ErrorCode.INTERNAL_ERROR);
+				return Result.error(ErrorCode.BAD_REQUEST);
 			}
 			return Result.ok(var);
 		} else {
-			return Result.error(ErrorCode.FORBIDDEN);
+			return Result.error(ErrorCode.NOT_FOUND);
 		}
 	}
 
@@ -157,14 +161,35 @@ public class JavaUsers implements Users {
 				return Result.ok(list);
 			} catch (Exception e){
 				e.printStackTrace();
-				return Result.error(ErrorCode.INTERNAL_ERROR);
+				return Result.error(ErrorCode.BAD_REQUEST);
 			}
 	}
 
 	@Override
 	public Result<byte[]> getUserPhoto(String name, String pwd) {
 		Log.info("getUserPhoto : user = " + name + "; pwd = " + pwd);
-		return Result.ok(getUser(name,pwd).value().getPhoto());
+		// Check if user is valid
+		if (name == null || pwd == null) {
+			Log.info("UserId or password null.");
+			return Result.error(ErrorCode.BAD_REQUEST);
+		}
+		User user = null;
+		try {
+			user = hibernate.get(User.class, name);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Result.error(ErrorCode.INTERNAL_ERROR);
+		}
+		// Check if user exists and password is correct...
+		if (user == null || !user.getPwd().equals(pwd)) {
+			Log.info("Password is incorrect");
+			return Result.error(ErrorCode.FORBIDDEN);
+		}
+		if (user.getPhoto() == null){
+			Log.info("User has no Photo");
+			return Result.error(ErrorCode.NOT_FOUND);
+		}
+		return Result.ok(user.getPhoto());
 	}
 
 	@Override
@@ -179,10 +204,14 @@ public class JavaUsers implements Users {
 		User user = null;
 		try {
 			user = getUser(name,pwd).value();
+			if (user == null || !user.getPwd().equals(pwd)){
+				Log.info("User does not exist or password does not exist");
+				return Result.error(ErrorCode.FORBIDDEN);
+			}
 			user.setPhoto(photo);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return Result.error(ErrorCode.INTERNAL_ERROR);
+			return Result.error(ErrorCode.BAD_REQUEST);
 		}
 		return Result.ok(user);
 	}

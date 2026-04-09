@@ -41,7 +41,16 @@ public class JavaMessages implements Messages {
             return Result.error(Result.ErrorCode.BAD_REQUEST);
         }
         Result<User> result = users.getUser(msg.getSender(),pwd);
+        if(!result.isOK()){
+            result = users.getUser(msg.getSender()+"@"+myDomain,pwd);
+            if (!result.isOK() || !result.value().getPwd().equals(pwd)){
+                return Result.error(Result.ErrorCode.FORBIDDEN);
+            }
+        }
         User sender = result.value();
+        if(!sender.getPwd().equals(pwd)){
+            return Result.error(Result.ErrorCode.FORBIDDEN);
+        }
         if (result.isOK()){
             String generatedId = UUID.randomUUID().toString();
             msg.setId(generatedId);
@@ -105,9 +114,9 @@ public class JavaMessages implements Messages {
             return Result.error(Result.ErrorCode.BAD_REQUEST);
         }
         Result<User> result = users.getUser(name,pwd);
-        if (!result.isOK()){
-            log.info("User not found " + name);
-            return Result.error(result.error());
+        if (!result.isOK() || !result.value().getPwd().equals(pwd)){
+            log.info("User not found or Password is incorrect" + name);
+            return Result.error(Result.ErrorCode.FORBIDDEN);
         } else {
             User user = result.value();
             String Domain  = user.getDomain();
@@ -130,8 +139,8 @@ public class JavaMessages implements Messages {
                 if (messageResult.isOK()){
                     return messageResult;
                 } else {
-                    log.info("Message not found"+ mid);
-                    return Result.error(messageResult.error());
+                 //   log.info("Message not found"+ mid);
+                    return Result.error(result.error());
                 }
             }
         }
@@ -141,12 +150,12 @@ public class JavaMessages implements Messages {
     public Result<List<String>> getAllInboxMessages(String name, String pwd) {
         log.info("getUserName : name = " + name + "; pwd = " + pwd);
         if (name == null || pwd == null){
-            log.info("Name or Password.");
+            log.info("Name or Password is null.");
             return Result.error(Result.ErrorCode.BAD_REQUEST);
         }
         Result<User> userResult = users.getUser(name,pwd);
-        if (!userResult.isOK()){
-            return Result.error(userResult.error());
+        if (!userResult.isOK() || !userResult.value().getPwd().equals(pwd)){
+            return Result.error(Result.ErrorCode.FORBIDDEN);
         } else {
             User user = userResult.value();
             String domain = user.getDomain();
@@ -187,8 +196,8 @@ public class JavaMessages implements Messages {
             return Result.error(Result.ErrorCode.BAD_REQUEST);
         }
         Result<User> userResult = users.getUser(name,pwd);
-        if (!userResult.isOK()){
-            return Result.error(userResult.error());
+        if (!userResult.isOK() || !userResult.value().getPwd().equals(pwd)){
+            return Result.error(Result.ErrorCode.FORBIDDEN);
         }
         else {
             User user = userResult.value();
@@ -204,7 +213,7 @@ public class JavaMessages implements Messages {
                         hibernate.update(msg);
                     }
                 } else {
-                    return Result.error(Result.ErrorCode.CONFLICT);
+                    return Result.error(Result.ErrorCode.BAD_REQUEST);
                 }
             } else {
                 URI serverURI = discovery.lookup(domain,Messages.SERVICE_NAME);
@@ -226,16 +235,15 @@ public class JavaMessages implements Messages {
             return Result.error(Result.ErrorCode.BAD_REQUEST);
         }
         Result<User> userResult = users.getUser(name,pwd);
-        if (!userResult.isOK()){
-            return Result.error(userResult.error());
+        if (!userResult.isOK() || !userResult.value().getPwd().equals(pwd)){
+            return Result.error(Result.ErrorCode.FORBIDDEN);
         } else {
             User user = userResult.value();
             String domain = user.getDomain();
             if (domain.equals(myDomain)){
                 Message msg = hibernate.get(Message.class,mid);
-                if (msg == null){
-                    log.info("Message Not Found");
-                    return Result.error(Result.ErrorCode.NOT_FOUND);
+                if(msg == null){
+                    return Result.ok();
                 }
                 if (msg.getSender().equals(name) || msg.getSender().equals(name+"@"+domain)){
                     Long now = System.currentTimeMillis();
@@ -252,7 +260,7 @@ public class JavaMessages implements Messages {
             var client = new RestMessagesClient(serverUri);
             Result<Void> res = client.deleteMessage(name,mid,pwd);
             if (!res.isOK()){
-                return Result.error(Result.ErrorCode.CONFLICT);
+                return Result.error(res.error());
             }
         }
         return Result.ok();
@@ -266,8 +274,8 @@ public class JavaMessages implements Messages {
             return Result.error(Result.ErrorCode.BAD_REQUEST);
         }
         Result<User> userResult = users.getUser(name,pwd);
-        if (!userResult.isOK()){
-            return Result.error(userResult.error());
+        if (!userResult.isOK() || !userResult.value().getPwd().equals(pwd)){
+            return Result.error(Result.ErrorCode.FORBIDDEN);
         } else {
             User user = userResult.value();
             String domain = user.getDomain();
