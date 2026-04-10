@@ -26,7 +26,7 @@ public class JavaUsers implements Users {
 
 	@Override
 	public Result<String> postUser(User user) {
-		Log.info("createUser : " + user);
+		Log.info("postUser : " + user);
 
 		// Check if user data is valid
 		if (user.getName() == null || user.getPwd() == null || user.getDisplayName() == null
@@ -59,18 +59,20 @@ public class JavaUsers implements Users {
 		User user = null;
 		try {
 			user = hibernate.get(User.class, userId);
+			if (user == null || !user.getPwd().equals(password)) {
+				Log.info("Password is incorrect");
+				return Result.error(ErrorCode.FORBIDDEN);
+			}
+			return Result.ok(user);
 		} catch (Exception e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 			return Result.error(ErrorCode.INTERNAL_ERROR);
 		}
 
 		// Check if user exists and password is correct...
-		if (user == null || !user.getPwd().equals(password)) {
-			Log.info("Password is incorrect");
-			return Result.error(ErrorCode.FORBIDDEN);
-		}
 
-		return Result.ok(user);
+
+
 
 	}
 
@@ -81,17 +83,24 @@ public class JavaUsers implements Users {
 			Log.info("Name or Password is null.");
 			return Result.error(ErrorCode.BAD_REQUEST);
 		}
-		if (user.getName() == null || user.getPwd() == null || user.getDomain() == null || user.getDisplayName() == null) {
-			Log.info("Some Info Credentials may be null");
-			return Result.error(ErrorCode.BAD_REQUEST);
-		}
-		User existingUser = getUser(userId,password).value();
+/*
+if (user.getName() == null || user.getPwd() == null || user.getDomain() == null || user.getDisplayName() == null) {
+Log.info("Some Info Credentials may be null");
+return Result.error(ErrorCode.BAD_REQUEST);
+}
+*/
+		User existingUser = hibernate.get(User.class,userId);
 		if (existingUser == null){
+			Log.info("User not Found");
 			return Result.error(ErrorCode.NOT_FOUND);
 		}
+		/*
 		if (!existingUser.getPwd().equals(password)){
+			Log.info("Incorrect Password");
 			return Result.error(ErrorCode.FORBIDDEN);
 		}
+		 */
+
 		existingUser.setDisplayName(user.getDisplayName());
 		existingUser.setPwd(user.getPwd());
 		existingUser.setDomain(user.getDomain());
@@ -114,6 +123,7 @@ public class JavaUsers implements Users {
 			x.printStackTrace();
 			return Result.error(ErrorCode.BAD_REQUEST);
 		}
+
 	}
 
 	@Override

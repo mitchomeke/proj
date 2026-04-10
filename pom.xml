@@ -83,7 +83,7 @@
 				<configuration>
 					<protocArtifact>com.google.protobuf:protoc:3.21.4</protocArtifact>
 					<inputDirectories>
-						<include>${project.basedir}/src/lab4/api/grpc</include>
+						<include>${project.basedir}/src/lab5/api/grpc</include>
 					</inputDirectories>
 					<outputDirectory>src/</outputDirectory>
 				</configuration>

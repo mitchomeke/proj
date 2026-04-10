@@ -21,19 +21,15 @@ public class RestUsersServer extends AbstractRestServer {
 	@Override
 	void registerResources(ResourceConfig config) {
 		config.register(RestUsersResource.class);
-	}	
-	
-	public static void main(String[] args) throws Exception{
-// 1. Determine Port (use arg[0] or default to 8080)
-		int port = (args.length > 0) ? Integer.parseInt(args[0]) : 8080;
+	}
 
-		// 2. Determine Domain (use arg[1] or default to "ourorg")
-		String domain = (args.length > 1) ? args[1] : "ourorg";
+	public static void main(String[] args) throws Exception {
+		int port = args.length > 0 ? Integer.parseInt(args[0]) : PORT;
 
-		Log.info(String.format("Starting Users Server on port %d, domain %s", port, domain));
+		String domain = args.length > 1 ? args[1] : "default";
 
-		// 3. Start the server
-		new RestUsersServer(port, Users.SERVICE_NAME, domain).start();
+		Log.info(String.format("Starting %s Server: port %d, domain %s", Users.SERVICE_NAME, port, domain));
+		new RestUsersServer(port,Users.SERVICE_NAME, domain).start();
 	}
 
 }

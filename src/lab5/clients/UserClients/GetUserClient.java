@@ -15,6 +15,9 @@ public class GetUserClient {
             System.err.println("Use: java "+ GetUserClient.class.getCanonicalName() + "name pwd domain");
             return;
         }
+        /*
+
+         */
         String name = args[0];
         String pwd = args[1];
         String domain = args[2];

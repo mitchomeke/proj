@@ -12,7 +12,7 @@ import lab5.Discovery;
 
 
 public abstract class AbstractRestServer {
-	private static final String SERVER_BASE_URI = "http://%s:%d/rest";
+	private static final String SERVER_BASE_URI = "http://%s:%s/rest";
 	
 	static {
 		System.setProperty("java.net.preferIPv4Stack", "true");
