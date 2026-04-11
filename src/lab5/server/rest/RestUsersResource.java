@@ -12,6 +12,7 @@ import lab5.api.User;
 import lab5.api.java.Result;
 import lab5.api.java.Users;
 import lab5.api.rest.RestUsers;
+import lab5.clients.UserClients.GetUserClient;
 import lab5.server.java.JavaUsers;
 import lab5.server.persistence.Hibernate;
 
@@ -26,9 +27,7 @@ public class RestUsersResource extends RestResource implements RestUsers {
 		impl = new JavaUsers();
 	}
 
-	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
+
 	@Override
 	public String postUser(User user) {
 		Log.info("postUser : " + user);
@@ -42,11 +41,9 @@ public class RestUsersResource extends RestResource implements RestUsers {
 	}
 
 
-	@GET
-	@Path("/{" + NAME +"}")
-	@Produces(MediaType.APPLICATION_JSON)
+
 	@Override
-	public User getUser(@PathParam(NAME) String name, @QueryParam(PWD) String pwd) {
+	public User getUser( String name,  String pwd) {
 		Log.info("getUser : user = " + name + "; pwd = " + pwd);
 		Result<User> result = impl.getUser(name,pwd);
 		if (result.isOK()){
@@ -56,12 +53,9 @@ public class RestUsersResource extends RestResource implements RestUsers {
 		}
 	}
 
-	@PUT
-	@Path("/{" + NAME +"}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
+
 	@Override
-	public User updateUser(@PathParam(NAME) String name, @QueryParam(PWD) String pwd, User user) {
+	public User updateUser( String name,String pwd, User user) {
 		Log.info("updateUser : user = " + name + "; pwd = " + pwd + " ; userData = " + user);
 		Result<User> result = impl.updateUser(name,pwd,user);
 		if (result.isOK()){
@@ -71,11 +65,9 @@ public class RestUsersResource extends RestResource implements RestUsers {
 		}
 	}
 
-	@DELETE
-	@Path("/{" + NAME + "}")
-	@Produces(MediaType.APPLICATION_JSON)
+
 	@Override
-	public User deleteUser(@PathParam(NAME) String name, @QueryParam(PWD) String pwd) {
+	public User deleteUser( String name,  String pwd) {
 		Log.info("deleteUser : user = " + name + "; pwd = " + pwd);
 		Result<User> result = impl.deleteUser(name,pwd);
 		if (result.isOK()){
@@ -85,10 +77,9 @@ public class RestUsersResource extends RestResource implements RestUsers {
 		}
 	}
 
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
+
 	@Override
-	public List<User> searchUsers(@QueryParam(QUERY) String pattern) {
+	public List<User> searchUsers( String pattern) {
 		Log.info("searchUsers : pattern = " + pattern);
 		Result<List<User>> result = impl.searchUsers(pattern);
 		if (result.isOK()){
@@ -98,11 +89,9 @@ public class RestUsersResource extends RestResource implements RestUsers {
 		}
 	}
 
-	@GET
-	@Path("/{" + NAME + "}/" + PHOTO)
-	@Produces(MediaType.APPLICATION_OCTET_STREAM)
+
 	@Override
-	public byte[] getUserPhoto(@PathParam(NAME) String name, @QueryParam(PWD) String pwd) {
+	public byte[] getUserPhoto( String name,  String pwd) {
 		Log.info("getUserPhoto : user = " + name);
 		Result<byte[]> result = impl.getUserPhoto(name, pwd);
 		if (result.isOK()){
@@ -112,12 +101,9 @@ public class RestUsersResource extends RestResource implements RestUsers {
 		}
 	}
 
-	@PUT
-	@Path("/{" + NAME + "}/" + PHOTO)
-	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
-	@Produces(MediaType.APPLICATION_JSON)
+
 	@Override
-	public User updateUserPhoto(@PathParam(NAME) String name, @QueryParam(PWD) String pwd, byte[] photo) {
+	public User updateUserPhoto(String name,  String pwd, byte[] photo) {
 		Log.info("updateUserPhoto : user = " + name);
 		Result<User> result = impl.updateUserPhoto(name,pwd,photo);
 		if (result.isOK()){

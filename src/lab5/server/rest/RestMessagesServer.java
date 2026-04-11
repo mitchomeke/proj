@@ -17,7 +17,7 @@ public class RestMessagesServer extends AbstractRestServer{
     void registerResources(ResourceConfig config) {
         config.register(RestMessagesResource.class);
     }
-    public static void main (String[] args) throws UnknownHostException {
+    public static void main (String[] args) throws UnknownHostException, InterruptedException {
         int port = Integer.parseInt(args[0]);
         String domain = args[1];
         new RestMessagesServer(port,Messages.SERVICE_NAME,domain).start();

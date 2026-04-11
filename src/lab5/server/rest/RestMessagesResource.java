@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 
 public class RestMessagesResource extends RestResource implements RestMessages {
 
-    private static Logger Log = Logger.getLogger(RestUsersResource.class.getName());
+    private static Logger Log = Logger.getLogger(RestMessagesResource.class.getName());
 
     final Messages impl;
     public RestMessagesResource(){

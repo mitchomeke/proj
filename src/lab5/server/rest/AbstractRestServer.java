@@ -35,7 +35,7 @@ public abstract class AbstractRestServer {
 
 	}
 
-	protected void start() {
+	protected void start() throws InterruptedException {
 		
 		ResourceConfig config = new ResourceConfig();
 		
@@ -49,6 +49,7 @@ public abstract class AbstractRestServer {
 		Discovery.announce(service,domain,serverURI);
 		
 		Log.info(String.format("%s Server ready @ %s\n",  service, serverURI));
+		Thread.currentThread().join();
 	}
 	
 	abstract void registerResources( ResourceConfig config );

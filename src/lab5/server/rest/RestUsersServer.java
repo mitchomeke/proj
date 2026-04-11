@@ -26,7 +26,7 @@ public class RestUsersServer extends AbstractRestServer {
 	public static void main(String[] args) throws Exception {
 		int port = args.length > 0 ? Integer.parseInt(args[0]) : PORT;
 
-		String domain = args.length > 1 ? args[1] : "default";
+		String domain = (args.length > 1 && !args[1].equalsIgnoreCase("default")) ? args[1] : "ourorg";
 
 		Log.info(String.format("Starting %s Server: port %d, domain %s", Users.SERVICE_NAME, port, domain));
 		new RestUsersServer(port,Users.SERVICE_NAME, domain).start();
