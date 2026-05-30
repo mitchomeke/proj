@@ -1,5 +1,6 @@
 package lab5.clients.java;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.function.Function;
 
@@ -28,7 +29,7 @@ public class GenericClientFactory<T> implements ClientFactory<T> {
 	
 	
 	@Override
-	public T get(String domain) {
+	public T get(String domain) throws IOException {
 		var sn = "%s%s%s".formatted(serviceName, DOMAIN_DELIMITER, domain);
 		return newClient(Discovery.knownUrisOf(sn, 1)[0] );
 	}

@@ -11,6 +11,7 @@ import lab5.clients.grpc.GrpcUsersClient;
 import lab5.clients.rest.RestMessagesClient;
 import lab5.clients.rest.RestUsersClient;
 
+import java.io.IOException;
 import java.net.URI;
 
 public class MessagesClientFactory {
@@ -19,7 +20,7 @@ public class MessagesClientFactory {
     private static final String GRPC = "/grpc";
     private static final Object DOMAIN_DELIMITER = "@";
 
-    static public Messages get(String domain) {
+    static public Messages get(String domain) throws IOException {
         var sn = "%s%s%s".formatted(Messages.SERVICE_NAME, DOMAIN_DELIMITER, domain);
         return newClient(Discovery.knownUrisOf(sn,1)[0]);
     }
@@ -34,7 +35,7 @@ public class MessagesClientFactory {
     }
 
 
-    public static void main(String[] args ) {
+    public static void main(String[] args ) throws IOException {
 
         Messages client = MessagesClientFactory.get("some_domain");
 

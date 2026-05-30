@@ -36,18 +36,18 @@ public class Hibernate {
 			instance = new Hibernate();
 		return instance;
 	}
-	
+
 	/**
 	 * Persists one or more objects to storage
 	 * @param objects - the objects to persist
-	 */ 
+	 */
 	public void persist(Object... objects) {
 		Transaction tx = null;
 		try(var session = sessionFactory.openSession()) {
 		     tx = session.beginTransaction();
 		     for( var o : objects )
 		    	 session.persist(o);
-		     tx.commit();			
+		     tx.commit();
 		} catch (Exception e) {
 		     if (tx!=null) tx.rollback();
 		     throw e;
@@ -58,21 +58,21 @@ public class Hibernate {
 	 * Gets one object from storage
 	 * @param identifier - the objects identifier
 	 * @param clazz - the class of the object that to be returned
-	 */ 
+	 */
 	public <T> T get(Class<T> clazz, Object identifier) {
 		Transaction tx = null;
 		T element = null;
 		try(var session = sessionFactory.openSession()) {
 		     tx = session.beginTransaction();
-		     element = session.get(clazz, identifier);
-		     tx.commit();			
+		     element = session.find(clazz, identifier);
+		     tx.commit();
 		} catch (Exception e) {
 		     if (tx!=null) tx.rollback();
 		     throw e;
 		}
 		return element;
 	}
-	
+
 	/**
 	 * Updates one or more objects previously persisted.
 	 * @param objects - the objects to update
@@ -83,15 +83,15 @@ public class Hibernate {
 		     tx = session.beginTransaction();
 		     for( var o : objects )
 		    	 session.merge(o);
-		     tx.commit();			
+		     tx.commit();
 		} catch (Exception e) {
 		     if (tx!=null) tx.rollback();
 		     throw e;
 		}
 	}
-	
+
 	/**
-	 * Removes one or more objects from storage 
+	 * Removes one or more objects from storage
 	 * @param objects - the objects to remove from storage
 	 */
 	public void delete(Object... objects) {
@@ -100,15 +100,15 @@ public class Hibernate {
 		     tx = session.beginTransaction();
 		     for( var o : objects )
 		    	 session.remove(o);
-		     tx.commit();			
+		     tx.commit();
 		} catch (Exception e) {
 		     if (tx!=null) tx.rollback();
 		     throw e;
 		}
 	}
-	
+
 	/**
-	 * Performs a jpql Hibernate query (SQL dialect) 
+	 * Performs a jpql Hibernate query (SQL dialect)
 	 * @param <T> The type of objects returned by the query
 	 * @param jpqlStatement - the jpql query statement
 	 * @param clazz - the class of the objects that will be returned
@@ -124,8 +124,8 @@ public class Hibernate {
 	}
 
 	/**
-	 * Performs a (native) SQL query  
-	 * 
+	 * Performs a (native) SQL query
+	 *
 	 * @param <T> The type of objects returned by the query
 	 * @param sqlStatement - the sql query statement
 	 * @param clazz - the class of the objects that will be returned
@@ -139,5 +139,5 @@ public class Hibernate {
 		    throw e;
 		}
 	}
-	
+
 }

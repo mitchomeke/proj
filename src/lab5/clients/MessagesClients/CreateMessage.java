@@ -10,6 +10,7 @@ import lab5.clients.java.UsersClientFactory;
 import lab5.clients.rest.RestMessagesClient;
 import lab5.clients.rest.RestUsersClient;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -17,7 +18,7 @@ import java.util.logging.Logger;
 public class CreateMessage {
     private static Logger Log = Logger.getLogger(CreateMessage.class.getName());
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws IOException {
         if (args.length < 5){
             System.err.println("Use Java: " + CreateMessage.class.getCanonicalName() + "Sender pwd subject content domain destination1 destination2....");
             return;

@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 public class RestGatewayServer extends AbstractRestServer {
 
     private static Logger Log = Logger.getLogger(RestGatewayServer.class.getName());
-    public static final int PORT = 8080;
+    public static final int PORT = 9090;
     public static final String SERVICE_NAME = "gateway";
 
     RestGatewayServer(int port, String domain) throws UnknownHostException {

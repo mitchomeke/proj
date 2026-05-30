@@ -5,11 +5,12 @@ import lab5.api.java.Messages;
 import lab5.api.java.Result;
 import lab5.clients.java.Clients;
 
+import java.io.IOException;
 import java.util.logging.Logger;
 
 public class GetInboxMessage {
     private static Logger Log = Logger.getLogger(GetInboxMessage.class.getName());
-    public static void main(String[] args){
+    public static void main(String[] args) throws IOException {
         if (args.length != 4){
             System.err.println("Use java: " + GetInboxMessage.class.getCanonicalName() + "name pwd mid domain");
         }

@@ -30,7 +30,7 @@ public class RestUsersResource extends RestResource implements RestUsers {
 
 	@Override
 	public String postUser(User user) {
-		Log.info("postUser : " + user);
+	//	Log.info("postUser : " + user);
 		// Check if user data is valid
 		Result<String> result = impl.postUser(user);
 		if (result.isOK()){
@@ -44,11 +44,12 @@ public class RestUsersResource extends RestResource implements RestUsers {
 
 	@Override
 	public User getUser( String name,  String pwd) {
-		Log.info("getUser : user = " + name + "; pwd = " + pwd);
+	//	Log.info("getUser : user = " + name + "; pwd = " + pwd);
 		Result<User> result = impl.getUser(name,pwd);
 		if (result.isOK()){
 			return result.value();
 		} else {
+			Log.info("Get User -> Error:"+result.error().name());
 			throw new WebApplicationException(errorCodeToStatus(result.error()));
 		}
 	}
@@ -77,7 +78,7 @@ public class RestUsersResource extends RestResource implements RestUsers {
 		}
 	}
 
-
+/*
 	@Override
 	public List<User> searchUsers( String pattern) {
 		Log.info("searchUsers : pattern = " + pattern);
@@ -88,6 +89,8 @@ public class RestUsersResource extends RestResource implements RestUsers {
 			throw new WebApplicationException(result.error().name());
 		}
 	}
+ */
+
 
 
 	@Override

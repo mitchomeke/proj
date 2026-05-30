@@ -18,7 +18,7 @@ public class JavaUsers implements Users {
 
 	private static Logger Log = Logger.getLogger(JavaUsers.class.getName());
 
-	private Hibernate hibernate;
+	private final Hibernate hibernate;
 
 	public JavaUsers() {
 		hibernate = Hibernate.getInstance();
@@ -48,28 +48,35 @@ public class JavaUsers implements Users {
 
 	@Override
 	public Result<User> getUser(String userId, String password) {
-		Log.info("getUser : user = " + userId + "; pwd = " + password);
+		Log.info("getUser : user = " + userId.trim() + "; pwd = " + password);
+		// Add this temporarily to your getUser method to see what's inside
 
 		// Check if user is valid
-		if (userId == null || password == null) {
+		if (userId == null) {
 			Log.info("UserId or password null.");
 			return Result.error(ErrorCode.BAD_REQUEST);
 		}
 
 		User user = null;
 		try {
-			user = hibernate.get(User.class, userId);
-			if (user == null || !user.getPwd().equals(password)) {
-				Log.info("Password is incorrect");
-				return Result.error(ErrorCode.FORBIDDEN);
-			}
-			return Result.ok(user);
+			user = hibernate.get(User.class, userId.trim());
 		} catch (Exception e) {
-			e.printStackTrace();
 			return Result.error(ErrorCode.INTERNAL_ERROR);
 		}
 
-		// Check if user exists and password is correct...
+		// Check if user exists
+		if (user == null) {
+			Log.info("User does not exist.");
+			return Result.error(ErrorCode.NOT_FOUND);
+		}
+
+		// Check if the password is correct
+		if(!user.getPwd().equals(password)) {
+			Log.info("Password is incorrect");
+			return Result.error(ErrorCode.FORBIDDEN);
+		}
+
+		return Result.ok(user);
 
 
 
@@ -79,33 +86,53 @@ public class JavaUsers implements Users {
 	@Override
 	public Result<User> updateUser(String userId, String password, User user) {
 		Log.info("updateUser : name = " + userId + "; pwd = " + password + " ; info = " + user);
-		if (userId == null || password == null) {
+		/*
+				if (userId == null || password == null) {
 			Log.info("Name or Password is null.");
 			return Result.error(ErrorCode.BAD_REQUEST);
 		}
-
-        if (user.getName() == null || user.getPwd() == null || user.getDomain() == null || user.getDisplayName() == null) {
+		        if (user.getPwd() == null) {
            Log.info("Some Info Credentials may be null");
               return Result.error(ErrorCode.BAD_REQUEST);
 }
 
-		User existingUser = hibernate.get(User.class,userId);
+		 */
+
+
+
+
+		Result<User> userResult = getUser(userId,password);
+		if (!userResult.isOK()){
+			return Result.error(userResult.error());
+		}
+		User existingUser = userResult.value();
 		if (existingUser == null){
 			Log.info("User not Found");
 			return Result.error(ErrorCode.NOT_FOUND);
 		}
-
-		if (!existingUser.getPwd().equals(password)){
+/*
+	if (!user.getPwd().equals(password)){
 			Log.info("Incorrect Password");
 			return Result.error(ErrorCode.FORBIDDEN);
 		}
+ */
 
 
-		existingUser.setDisplayName(user.getDisplayName());
-		existingUser.setPwd(user.getPwd());
-		existingUser.setDomain(user.getDomain());
-		existingUser.setPhoto(user.getPhoto());
-		existingUser.setPhoneNumbers(user.getPhoneNumbers());
+		if (user.getDisplayName() != null){
+			existingUser.setDisplayName(user.getDisplayName());
+		}
+		if (user.getDomain() != null){
+			existingUser.setDomain(user.getDomain());
+		}
+		if (user.getPwd() != null){
+			existingUser.setPwd(user.getPwd());
+		}
+		if (user.getPhoto() != null){
+			existingUser.setPhoto(user.getPhoto());
+		}
+		if (user.getPhoneNumbers() != null){
+			existingUser.setPhoneNumbers(user.getPhoneNumbers());
+		}
 		try {
 			hibernate.update(existingUser);
 			return Result.ok(existingUser);

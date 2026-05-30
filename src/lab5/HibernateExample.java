@@ -53,7 +53,7 @@ public class HibernateExample {
 		try(var session = sessionFactory.openSession()) {
 		     var tx = session.beginTransaction();
 		     try {
-                var u = session.get(User.class,name );
+                var u = session.find(User.class, name);
                 if( ! u.getPhoneNumbers().contains(phoneNumber))
                     u.getPhoneNumbers().add(phoneNumber);
                 session.persist(u);
@@ -70,7 +70,7 @@ public class HibernateExample {
                 connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE));
 		     var tx = session.beginTransaction();
 		     try {
-                var u = session.get(User.class,name );
+                var u = session.find(User.class, name);
                 System.out.println( u);
                 
                 tx.commit();

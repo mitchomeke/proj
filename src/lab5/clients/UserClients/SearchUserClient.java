@@ -5,13 +5,14 @@ import lab5.api.java.Result;
 import lab5.api.java.Users;
 import lab5.clients.java.Clients;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
 
 public class SearchUserClient {
     private static Logger Log = Logger.getLogger(SearchUserClient.class.getName());
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws IOException {
         if (args.length != 4){
             System.err.println("Use java: " + SearchUserClient.class.getCanonicalName() + " name pwd query domain");
             return;

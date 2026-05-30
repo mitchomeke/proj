@@ -1,5 +1,6 @@
 package lab5.clients.java;
 
+import java.io.IOException;
 import java.net.URI;
 
 import lab5.Discovery;
@@ -21,9 +22,9 @@ public abstract class AbstractClientFactory<T> implements ClientFactory<T> {
 		this.serviceName = serviceName;
 	}
 	
-	public T get(String domain) {
+	public T get(String domain) throws IOException {
 		var sn = "%s%s%s".formatted(serviceName, DOMAIN_DELIMITER, domain);
-		return newClient(Discovery.knownUrisOf(sn, 1)[0] );
+		return newClient(Discovery.knownUrisOf(sn,1)[0]);
 	}
 	
 	private T newClient( URI serverURI ) {

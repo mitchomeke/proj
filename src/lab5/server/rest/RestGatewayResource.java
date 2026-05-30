@@ -18,13 +18,19 @@ import java.util.logging.Logger;
 public class RestGatewayResource extends RestResource{
     private static Logger Log = Logger.getLogger(RestGatewayResource.class.getName());
 
-    private final RestUsersClient usersClient;
+    /*
+        private final RestUsersClient usersClient;
     private final RestMessagesClient messagesClient;
+     */
+
 
     public RestGatewayResource(){
-        Discovery discovery = Discovery.getInstance();
+        /*
+                Discovery discovery = Discovery.getInstance();
         usersClient = new RestUsersClient(discovery.knownUrisOf(Users.SERVICE_NAME,1)[0]);
         messagesClient = new RestMessagesClient(discovery.knownUrisOf(Messages.SERVICE_NAME,1)[0]);
+         */
+
     }
 /*
     public User getUser(String name, String pwd) {
@@ -39,13 +45,4 @@ public class RestGatewayResource extends RestResource{
 }
  */
 
-    public String postMessage(String pwd, Message msg) {
-        Log.info("Gateway: postMessage from " + msg.getSender());
-        Result<String> result = messagesClient.postMessage(pwd,msg);
-        if (result.isOK()) {
-            return result.value();
-        } else {
-            throw new WebApplicationException(unwrapResultOrThrow(result));
-        }
-    }
 }

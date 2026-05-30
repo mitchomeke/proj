@@ -19,7 +19,7 @@ public class JavaMessages implements Messages {
     private static Logger log = Logger.getLogger(JavaMessages.class.getName());
     private final Hibernate hibernate;
     private final String myDomain;
-    private final Discovery discovery;
+    public static Discovery discovery;
     private static final String SECRT = "SECRET";
     private final RestUsersClient users;
 
@@ -27,7 +27,7 @@ public class JavaMessages implements Messages {
     public JavaMessages(){
         hibernate = Hibernate.getInstance();
         myDomain = System.getProperty("mydomain","defaultDomain");
-        discovery = Discovery.getInstance();
+
         URI userServerUri = discovery.lookup(myDomain,"users");
         users = new RestUsersClient(userServerUri);
     }

@@ -5,6 +5,7 @@ import lab5.api.java.Result;
 import lab5.api.java.Users;
 import lab5.clients.java.Clients;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -12,7 +13,7 @@ import java.util.logging.Logger;
 public class UpdateUserClient {
     private static Logger Log = Logger.getLogger(UpdateUserClient.class.getName());
 
-    public static void main (String[] args){
+    public static void main (String[] args) throws IOException {
         if (args.length < 6){
             System.err.println("Use: java: " + UpdateUserClient.class.getCanonicalName() + "name pwd newPwd newDisplayName newDomain phonenumber1 phonenumber2 .....");
             return;

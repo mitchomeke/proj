@@ -5,11 +5,12 @@ import lab5.api.java.Result;
 import lab5.api.java.Users;
 import lab5.clients.java.Clients;
 
+import java.io.IOException;
 import java.util.logging.Logger;
 
 public class DeleteUserClient {
     private static Logger Log = Logger.getLogger(DeleteUserClient.class.getName());
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         if (args.length != 3){
             System.err.println( "Use: java " + DeleteUserClient.class.getCanonicalName() + "name pwd domain");
             return;

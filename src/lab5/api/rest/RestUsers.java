@@ -45,10 +45,13 @@ public interface RestUsers {
 	@Produces(MediaType.APPLICATION_JSON)
 	User deleteUser(@PathParam(NAME) String name, @QueryParam(PWD) String pwd);
 
-	@GET
+	/*
+		@GET
 	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
 	List<User> searchUsers(@QueryParam(QUERY) String pattern);
+	 */
+
 
 	@GET
 	@Path("/{" + NAME + "}/" + PHOTO)

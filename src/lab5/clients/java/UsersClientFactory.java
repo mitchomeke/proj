@@ -1,5 +1,6 @@
 package lab5.clients.java;
 
+import java.io.IOException;
 import java.net.URI;
 
 import lab5.Discovery;
@@ -18,8 +19,9 @@ public class UsersClientFactory {
 	private static final String REST = "/rest";
 	private static final String GRPC = "/grpc";
 	private static final Object DOMAIN_DELIMITER = "@";
+
 		
-	static public Users get(String domain) {
+	static public Users get(String domain) throws IOException {
 		var sn = "%s%s%s".formatted(Users.SERVICE_NAME, DOMAIN_DELIMITER, domain);
 		return newClient(Discovery.knownUrisOf(sn, 1)[0] );
 	}
@@ -34,7 +36,7 @@ public class UsersClientFactory {
 	}
 	
 	
-	public static void main(String[] args ) {
+	public static void main(String[] args ) throws IOException {
 		
 		Users client = UsersClientFactory.get("ourorg");
 		
